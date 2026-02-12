@@ -1,0 +1,13 @@
+# Django backend
+vaaa-livestock-website/backend/__pycache__/
+vaaa-livestock-website/backend/*.py[cod]
+vaaa-livestock-website/backend/db.sqlite3
+vaaa-livestock-website/backend/.env
+vaaa-livestock-website/backend/staticfiles/
+vaaa-livestock-website/backend/media/
+vaaa-livestock-website/backend/venv/
+vaaa-livestock-website/backend/.venv/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: vaaa-backend
+    env: python
+    buildCommand: ./vaaa-livestock-website/backend/build.sh
+    startCommand: gunicorn vaaa.wsgi:application --chdir ./vaaa-livestock-website/backend
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vaaa-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+
+databases:
+  - name: vaaa-db
+    databaseName: vaaalivestock_db
+    user: postgres
+    plan: free
