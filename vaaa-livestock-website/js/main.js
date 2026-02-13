@@ -1,10 +1,12 @@
 // API Configuration
-// Replace 'your-backend-url.onrender.com' with your actual Render backend URL after deployment
 const RENDER_BACKEND_URL = 'https://vaaa-backend.onrender.com/api';
 
+// Automatically detect environment
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://127.0.0.1:8000/api'
     : RENDER_BACKEND_URL;
+
+console.log('Using API URL:', API_BASE_URL);
 
 // Smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -76,16 +78,44 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateCartDisplay();
 });
 
-// Fetch products from API
+// Fetch products from API with better error handling
 async function fetchProducts() {
     try {
-        const response = await fetch(`${API_BASE_URL}/products/`);
-        if (!response.ok) throw new Error('Failed to fetch products');
+        console.log('Fetching products from:', `${API_BASE_URL}/products/`);
+
+        const response = await fetch(`${API_BASE_URL}/products/`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+            mode: 'cors'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         products = await response.json();
-        console.log('Products loaded from API:', products);
+        console.log('Products loaded successfully:', products.length, 'products');
+
     } catch (error) {
         console.error('Error fetching products:', error);
-        // Fallback to static products if API fails during development
+
+        // Show user-friendly error message
+        const productsList = document.getElementById('productsList');
+        if (productsList) {
+            productsList.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-warning" role="alert">
+                        <h5>Unable to load products from server</h5>
+                        <p>Using sample products. Please check your internet connection or contact support.</p>
+                        <small>Error: ${error.message}</small>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fallback to static products
         products = [
             { id: 1, name: "Broiler Chickens", category: "poultry", price: 3500, unit: "per bird", image: "../images/products/broilers.jpg" },
             { id: 2, name: "Layer Hens", category: "poultry", price: 2800, unit: "per bird", image: "../images/products/layers.jpg" },
@@ -193,8 +223,8 @@ function updateCartDisplay() {
 
     if (cart.length === 0) {
         cartItems.innerHTML = '<p class="text-muted text-center">No items in cart</p>';
-        subtotal.textContent = '₦0';
-        total.textContent = '₦0';
+        if (subtotal) subtotal.textContent = '₦0';
+        if (total) total.textContent = '₦0';
         return;
     }
 
@@ -224,8 +254,8 @@ function updateCartDisplay() {
         cartItems.appendChild(cartItem);
     });
 
-    subtotal.textContent = `₦${subtotalAmount.toLocaleString()}`;
-    total.textContent = `₦${subtotalAmount.toLocaleString()}`;
+    if (subtotal) subtotal.textContent = `₦${subtotalAmount.toLocaleString()}`;
+    if (total) total.textContent = `₦${subtotalAmount.toLocaleString()}`;
 }
 
 // Navigation functions
@@ -342,28 +372,36 @@ async function checkout() {
         items: cart.map(item => ({ id: item.id, quantity: item.quantity }))
     };
 
+    console.log('Submitting order:', orderData);
+
     try {
         const response = await fetch(`${API_BASE_URL}/orders/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
+            mode: 'cors',
             body: JSON.stringify(orderData)
         });
 
+        console.log('Response status:', response.status);
+
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to submit order');
+            const errorData = await response.json().catch(() => ({ error: 'Unknown error occurred' }));
+            throw new Error(errorData.error || `Server error: ${response.status}`);
         }
+
+        const result = await response.json();
+        console.log('Order submitted successfully:', result);
 
         alert('Thank you for your order! Your order has been received.');
         cart = [];
         updateCartDisplay();
         nextStep(1);
+
     } catch (error) {
         console.error('Checkout error:', error);
-        alert('Error submitting order: ' + error.message);
+        alert('Error submitting order: ' + error.message + '\n\nPlease check your internet connection and try again.');
     }
 }
-
-
