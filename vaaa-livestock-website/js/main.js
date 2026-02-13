@@ -1,5 +1,8 @@
 // API Configuration
+<<<<<<< HEAD
 // Replace 'your-backend-url.onrender.com' with your actual Render backend URL after deployment
+=======
+>>>>>>> d27b420271b84794a39ff1b2b08acb183bcd0cce
 // Replace with your actual Render backend URL if different
 const RENDER_BACKEND_URL = 'https://vaaa-backend.onrender.com/api';
 
