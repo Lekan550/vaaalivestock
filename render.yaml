@@ -2,8 +2,8 @@ services:
   - type: web
     name: vaaa-backend
     env: python
-    buildCommand: ./vaaa-livestock-website/backend/build.sh
-    startCommand: gunicorn vaaa.wsgi:application --chdir ./vaaa-livestock-website/backend
+    buildCommand: ./backend/build.sh
+    startCommand: gunicorn vaaa.wsgi:application --chdir ./backend
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -15,6 +15,8 @@ services:
         value: "False"
       - key: ALLOWED_HOSTS
         value: "*"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://vaaalivestock.netlify.app"
 
 databases:
   - name: vaaa-db

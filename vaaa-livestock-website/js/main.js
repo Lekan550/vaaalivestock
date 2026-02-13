@@ -1,4 +1,5 @@
 // API Configuration
+// Replace with your actual Render backend URL if different
 const RENDER_BACKEND_URL = 'https://vaaa-backend.onrender.com/api';
 
 // Automatically detect environment
