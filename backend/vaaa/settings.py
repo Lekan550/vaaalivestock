@@ -62,7 +62,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True # In production, you should specify allowed origins
+# CORS Configuration
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('DEBUG', 'False') == 'True'
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5500,http://127.0.0.1:5500').split(',')
+
+# If on Netlify, add your Netlify URL to CORS_ALLOWED_ORIGINS in Render environment variables
+# Example: https://vaaalivestock.netlify.app
 
 ROOT_URLCONF = 'vaaa.urls'
 
