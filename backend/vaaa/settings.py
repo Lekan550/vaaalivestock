@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'vaaa.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgres://postgres:livestock123@localhost:5432/vaaalivestock_db'),
+        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:password@hostname:port/dbname'),
         conn_max_age=600
     )
 }
