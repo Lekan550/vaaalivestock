@@ -48,6 +48,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'vaaa',
+    'contact',
+    'orders',
+    'products',
+    'animals',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +68,7 @@ MIDDLEWARE = [
 
 # CORS Configuration
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('DEBUG', 'False') == 'True'
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5500,http://127.0.0.1:5500').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://vaaalivestock.netlify.app').split(',')
 
 # If on Netlify, add your Netlify URL to CORS_ALLOWED_ORIGINS in Render environment variables
 # Example: https://vaaalivestock.netlify.app
