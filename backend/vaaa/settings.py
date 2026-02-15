@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'vaaa.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:password@hostname:port/dbname'),
+        default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
     )
 }
